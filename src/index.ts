@@ -504,11 +504,13 @@ export class RentalWorks {
 
 				let lireq = this.insertLineItem(orderId, belowItemId)
 
-				let req = await axios.post(`${this.baseURL}/api/v1/orderitem`, item, {
+				let req = await axios.post(`${this.baseURL}/api/v1/orderitem`, 
+				{
+					...item,
+					OrderId: orderId
+				}, {
 					headers
 				})
-
-				console.log(req)
 
 				return false
 			}	
