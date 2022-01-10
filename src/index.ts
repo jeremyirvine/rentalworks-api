@@ -496,23 +496,27 @@ export class RentalWorks {
 				return req
 			}
 
-			async addSingleItemToOrderBottom(orderId: string, item: any, belowItemId: string): Promise<boolean> {
-				let headers = {
-            Authorization: `Bearer ${this.token}`,
-            'x-requested-with': "XMLHttpRequest"
-        }
+			async addSingleItemToOrderBottom(orderId: string, item: any, belowItemId: string): Promise<Record<string, any> | false> {
+				try {
+					let headers = {
+							Authorization: `Bearer ${this.token}`,
+							'x-requested-with': "XMLHttpRequest"
+					}
 
-				let lireq = this.insertLineItem(orderId, belowItemId)
+					let lireq = this.insertLineItem(orderId, belowItemId)
 
-				let req = await axios.post(`${this.baseURL}/api/v1/orderitem`, 
-				{
-					...item,
-					OrderId: orderId
-				}, {
-					headers
-				})
+					let req = await axios.post(`${this.baseURL}/api/v1/orderitem`, 
+					{
+						...item,
+						OrderId: orderId
+					}, {
+						headers
+					})
 
-				return false
+					return req.data
+				} catch(e) {
+					return false
+				}
 			}	
 
 			async addItemToOrder(orderId: string, itemId: string, items: Record<string, any>[], progress: (current: number, max: number) => void): Promise<any[]> {

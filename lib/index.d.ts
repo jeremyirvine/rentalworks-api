@@ -13,7 +13,7 @@ export declare class RentalWorks {
     getQuoteItems(quoteId: string): Promise<Types.RWResponse[]>;
     getOrderItems(orderId: string): Promise<Types.RWResponse[]>;
     insertLineItem(orderId: string, itemId: string): Promise<AxiosResponse<any>>;
-    addSingleItemToOrderBottom(orderId: string, item: any, belowItemId: string): Promise<boolean>;
+    addSingleItemToOrderBottom(orderId: string, item: any, belowItemId: string): Promise<Record<string, any> | false>;
     addItemToOrder(orderId: string, itemId: string, items: Record<string, any>[], progress: (current: number, max: number) => void): Promise<any[]>;
     getItems(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse[]>;
     getOrder(orderId: string): Promise<Types.RWResponse | Record<string, any>>;
