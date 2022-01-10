@@ -1,6 +1,6 @@
 {
   "name": "rentalworks-api",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "NodeJS bindings for interacting with RentalWorks",
   "main": "lib/index.js",
   "types": "lib",
