@@ -4,6 +4,10 @@
   "description": "NodeJS bindings for interacting with RentalWorks",
   "main": "lib/index.js",
   "types": "lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jeremyirvine/rentalworks-api"
+  },
   "scripts": {
     "build": "tsc -p ."
   },
