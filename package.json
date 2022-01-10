@@ -1,0 +1,19 @@
+{
+  "name": "rentalworks-api",
+  "version": "1.1.2",
+  "description": "NodeJS bindings for interacting with RentalWorks",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "Jeremy Irvine <jezzairves@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "axios": "^0.24.0"
+  }
+}
