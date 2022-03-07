@@ -36,11 +36,11 @@ export class RentalWorks {
 		}
 	}
 
-	async getWarehouses(): Promise<Types.RWResponse[]> {
+	async getWarehouses(): Promise<Types.RWResponse> {
 		if(this.token.length <= 0)
 		{
 			throw new Errors.RWNoTokenError()
-			return []
+			return { Rows: [], TotalRows: 0, TotalPages: 0 }
 		}
 
 		let headers = {
@@ -52,7 +52,13 @@ export class RentalWorks {
 			headers
 		})
 
-		return Util.parseResponseDeals(req.data)
+		let { TotalRows, TotalPages } = req.data
+
+		return {
+			Rows: Util.parseResponseDeals(req.data),
+			TotalRows,
+			TotalPages
+		}
 	}
 
 	async checkAuth(): Promise<boolean> {
@@ -75,7 +81,7 @@ export class RentalWorks {
 		}
 	}
 
-	async getQuotes(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse[]> {
+	async getQuotes(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse> {
 		let headers = {
 			Authorization: `Bearer ${this.token}`,
 			'x-requested-with': "XMLHttpRequest"
@@ -135,12 +141,17 @@ export class RentalWorks {
 
 			let req = await axios.post(`${this.baseURL}/api/v1/quote/browse`, payload, { headers })
 			
+			let { TotalRows, TotalPages } = req.data
 
-			return Util.parseResponseDeals(req.data)
+			return {
+				Rows: Util.parseResponseDeals(req.data),
+				TotalPages,
+				TotalRows
+			}
 	}
 
 
-	async getOrders(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse[]> {
+	async getOrders(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse> {
 		let headers = {
 			Authorization: `Bearer ${this.token}`,
 			'x-requested-with': "XMLHttpRequest"
@@ -199,14 +210,19 @@ export class RentalWorks {
 			}
 
 			let req = await axios.post(`${this.baseURL}/api/v1/order/browse`, payload, { headers })
-			
+		
+			let {TotalPages, TotalRows} = req.data
 
-			return Util.parseResponseDeals(req.data)
+			return {
+				Rows: Util.parseResponseDeals(req.data),
+				TotalRows,
+				TotalPages
+			}
 		}
 
 
 
-	async getTransfers(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse[]> {
+	async getTransfers(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse> {
 		let headers = {
 			Authorization: `Bearer ${this.token}`,
 			'x-requested-with': "XMLHttpRequest"
@@ -266,10 +282,16 @@ export class RentalWorks {
 
 			let req = await axios.post(`${this.baseURL}/api/v1/transferorder/browse`, payload, { headers })
 
-			return Util.parseResponseDeals(req.data)
+			let { TotalRows, TotalPages } = req.data
+				
+			return {
+				Rows: Util.parseResponseDeals(req.data),
+				TotalPages,
+				TotalRows
+			}
 		}
 
-		async getQuoteItems(quoteId: string): Promise<Types.RWResponse[]> {		
+		async getQuoteItems(quoteId: string): Promise<Types.RWResponse> {		
 			let headers = {
 				Authorization: `Bearer ${this.token}`,
 				'x-requested-with': "XMLHttpRequest"
@@ -278,7 +300,7 @@ export class RentalWorks {
 			let pageSize = 500
 			let page = 1
 			let totalPages = 1
-			let data: Types.RWResponse[] = []
+			let data: Types.RWResponse = { Rows: [], TotalRows: 0, TotalPages: 0 }
 			do {
 				let payload: Record<string, any> = {
 							"miscfields": {
@@ -357,14 +379,18 @@ export class RentalWorks {
 						headers: headers
           })
 
-					let { TotalPages, PageNo } = request.data
+					let { TotalPages, TotalRows, PageNo } = request.data
 					totalPages = TotalPages
 
 					let parsed = Util.parseResponseDeals(request.data)
-					data = [
-							...data,
+					data = {
+						Rows: [
+							...data.Rows,
 							...parsed
-					]
+						],
+						TotalPages: data.TotalPages + TotalPages,
+						TotalRows: data.TotalRows + TotalRows
+					}
 					page++
 				} while(page <= totalPages)
 
@@ -373,7 +399,7 @@ export class RentalWorks {
 
 
 
-		async getOrderItems(orderId: string): Promise<Types.RWResponse[]> {		
+		async getOrderItems(orderId: string): Promise<Types.RWResponse> {		
 			let headers = {
 				Authorization: `Bearer ${this.token}`,
 				'x-requested-with': "XMLHttpRequest"
@@ -382,7 +408,7 @@ export class RentalWorks {
 			let pageSize = 500
 			let page = 1
 			let totalPages = 1
-			let data: Types.RWResponse[] = []
+			let data: Types.RWResponse = { Rows: [], TotalRows: 0, TotalPages: 0 }
 			do {
 				let payload: Record<string, any> = {
 							"miscfields": {
@@ -462,14 +488,18 @@ export class RentalWorks {
 						headers: headers
           })
 
-					let { TotalPages, PageNo } = request.data
+					let { TotalPages, TotalRows, PageNo } = request.data
 					totalPages = TotalPages
 
 					let parsed = Util.parseResponseDeals(request.data)
-					data = [
-							...data,
+					data = {
+						Rows: [
+							...data.Rows,
 							...parsed
-					]
+						],
+						TotalPages: data.TotalPages + TotalPages,
+						TotalRows: data.TotalRows + TotalRows
+					}
 					page++
 				} while(page <= totalPages)
 
@@ -585,7 +615,7 @@ export class RentalWorks {
 				return ret	
 			}
 
-			async getItems(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse[]> {
+			async getItems(page: number, pageSize: number, search?: Record<string, any>): Promise<Types.RWResponse> {
 				let payload: Record<any, any> = {
 					"miscfields": {
 							"length": 0
@@ -703,8 +733,12 @@ export class RentalWorks {
 				let req = await axios.post(`${this.baseURL}/api/v1/orderitem/validateicoderental/browse`, payload, {
 					headers
 				})
-				
-				return Util.parseResponseDeals(req.data)
+			
+				return {
+					Rows: Util.parseResponseDeals(req.data),
+					TotalRows: req.data.TotalRows,
+					TotalPages: req.data.TotalPages,
+				}
 			}
 
       async getOrder(orderId: string): Promise<Types.RWResponse | Record<string, any>> {

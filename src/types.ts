@@ -1,6 +1,12 @@
 
-export type RWResponse = {
+export type RWRecord = {
 	Rows: Record<string, string>
+}
+
+export type RWResponse = {
+	Rows: RWRecord[],
+	TotalRows: number,
+	TotalPages: number
 }
 
 export type RWHeaders = {
